@@ -15,7 +15,7 @@ export class News extends Component {
   }
 
   async componentDidMount() {
-    let url = `https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=236b2c5df73a4507990536033f2ceb33&page=${this.state.page}&pagesize=24`;
+    let url = `https://newsapi.org/v2/top-headlines?country=in&category=${this.props.category}&apiKey=236b2c5df73a4507990536033f2ceb33&page=${this.state.page}&pagesize=24`;
     this.setState({ loading: true });
     let data = await fetch(url);
     let parsedData = await data.json();
@@ -31,7 +31,7 @@ export class News extends Component {
   handlePrevClick = async () => {
     console.log("Prev Clicked");
 
-    let url = `https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=236b2c5df73a4507990536033f2ceb33&page=${this.state.page - 1}&pagesize=24`;
+    let url = `https://newsapi.org/v2/top-headlines?country=in&category=${this.props.category}&apiKey=236b2c5df73a4507990536033f2ceb33&page=${this.state.page - 1}&pagesize=24`;
     this.setState({ loading: true });
     let data = await fetch(url);
     let parsedData = await data.json();
@@ -48,7 +48,7 @@ export class News extends Component {
 
 
 
-    let url = `https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=236b2c5df73a4507990536033f2ceb33&page=${this.state.page + 1}&pagesize=24`;
+    let url = `https://newsapi.org/v2/top-headlines?country=in&category=${this.props.category}&apiKey=236b2c5df73a4507990536033f2ceb33&page=${this.state.page + 1}&pagesize=24`;
     this.setState({ loading: true });
     let data = await fetch(url);
     let parsedData = await data.json();
@@ -65,8 +65,7 @@ export class News extends Component {
   render() {
     return (
       <div className='container mt-3'>
-        <h2>Top Headlines</h2>
-        <h2>Top Headlines</h2>
+        <h2 style={{'margin-top': '80px'}}>News of the Day</h2>
         {this.state.loading && <Spinner/>}
         <div className='row'>
           {!(this.state.loading) && this.state.articles.map((element) => {
