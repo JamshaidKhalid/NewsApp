@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import NewsItem from './NewsItem'
+import Spinner from './Spinner'
 
 export class News extends Component {
 
@@ -8,16 +9,22 @@ export class News extends Component {
     super();
     this.state = {
       articles: [],
-      page: 1
+      page: 1,
+      loading: false
     }
   }
 
   async componentDidMount() {
     let url = `https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=236b2c5df73a4507990536033f2ceb33&page=${this.state.page}&pagesize=24`;
+    this.setState({ loading: true });
     let data = await fetch(url);
     let parsedData = await data.json();
 
-    this.setState({ articles: parsedData.articles, totalResults: parsedData.totalResults });
+    this.setState({
+      articles: parsedData.articles,
+      totalResults: parsedData.totalResults,
+      loading: false
+    });
   }
 
 
@@ -25,12 +32,14 @@ export class News extends Component {
     console.log("Prev Clicked");
 
     let url = `https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=236b2c5df73a4507990536033f2ceb33&page=${this.state.page - 1}&pagesize=24`;
+    this.setState({ loading: true });
     let data = await fetch(url);
     let parsedData = await data.json();
 
     this.setState({
       page: this.state.page - 1,
-      articles: parsedData.articles
+      articles: parsedData.articles,
+      loading: false
     });
   }
 
@@ -40,12 +49,14 @@ export class News extends Component {
 
 
     let url = `https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=236b2c5df73a4507990536033f2ceb33&page=${this.state.page + 1}&pagesize=24`;
+    this.setState({ loading: true });
     let data = await fetch(url);
     let parsedData = await data.json();
 
     this.setState({
       page: this.state.page + 1,
-      articles: parsedData.articles
+      articles: parsedData.articles,
+      loading: false
     });
 
 
@@ -53,11 +64,12 @@ export class News extends Component {
 
   render() {
     return (
-      <div className='container my-3'>
+      <div className='container mt-3'>
         <h2>Top Headlines</h2>
-
+        <h2>Top Headlines</h2>
+        {this.state.loading && <Spinner/>}
         <div className='row'>
-          {this.state.articles.map((element) => {
+          {!(this.state.loading) && this.state.articles.map((element) => {
 
             return <div className='col-md-4' key={element.url}>
               <NewsItem title={element.title ? element.title.slice(0, 35) : ""} description={element.description ? element.description.slice(0, 58) : ""} newsUrl={element.url} imageUrl={element.urlToImage ? element.urlToImage : "https://www.team-bhp.com/sites/default/files/styles/large/public/03%20L%20to%20R%20-%20Refreshed%20Sonet%20Seltos.jpg"} />
